@@ -1,20 +1,24 @@
 package one.digitalinnovation.gof.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Cliente {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
+
 	@ManyToOne
 	private Endereco endereco;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente")
+	private List<Pet> pets;
 
 	public Long getId() {
 		return id;
@@ -40,4 +44,11 @@ public class Cliente {
 		this.endereco = endereco;
 	}
 
+	public List<Pet> getPets() {
+		return pets;
+	}
+
+	public void setPets(List<Pet> pets) {
+		this.pets = pets;
+	}
 }

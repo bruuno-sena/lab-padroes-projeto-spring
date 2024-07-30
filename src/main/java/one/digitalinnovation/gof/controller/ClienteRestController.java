@@ -1,18 +1,18 @@
 package one.digitalinnovation.gof.controller;
 
+import one.digitalinnovation.gof.model.Endereco;
+import one.digitalinnovation.gof.model.Pet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import one.digitalinnovation.gof.model.Cliente;
+import one.digitalinnovation.gof.model.ClienteRepository;
 import one.digitalinnovation.gof.service.ClienteService;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 /**
  * Esse {@link RestController} representa nossa <b>Facade</b>, pois abstrai toda
@@ -54,5 +54,16 @@ public class ClienteRestController {
 	public ResponseEntity<Void> deletar(@PathVariable Long id) {
 		clienteService.deletar(id);
 		return ResponseEntity.ok().build();
+	}
+	@GetMapping("/{id}/pets")
+	public ResponseEntity<List<Pet>> getPets(@PathVariable Long id) {
+		List<Pet> pets = clienteService.buscarPetsPorCliente(id);
+		return ResponseEntity.ok(pets);
+	}
+
+	@PostMapping("/{id}/pets/{petId}")
+	public ResponseEntity<Pet> adicionarPet(@PathVariable Long id, @PathVariable String petId) {
+		Pet novoPet = clienteService.adicionarPetAoCliente(id, petId);
+		return ResponseEntity.status(HttpStatus.CREATED).body(novoPet);
 	}
 }
